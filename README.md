@@ -3,8 +3,6 @@ attendance.js - To find the attendance of a certain Hong Kong LegCo Member for a
 
 speech.py - To find all the quotes of a certain Hong Kong LegCo Member in official council meetings records
 
-   _Users who have never used Python may download the executable (for macOS only as of Jun 27, 2023) on the releases page_
-
 _made for the 7th LegCo_
 
 ## How to use 
@@ -36,6 +34,8 @@ _By default, Safari is used. Edit Line 20~24 if you would like to use the others
 4. The code would run and output a Word document "speech.docx"
 
 _Edit the last line of code if you want it renamed_
+
+_Users who have never used Python may download the executable (for macOS only as of Jun 27, 2023) on the releases page_
 
 ## Disclaimer
 
