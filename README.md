@@ -30,6 +30,7 @@ Some of the famous choices:
 _By default, Safari is used. Edit Line 20~24 if you would like to use the others._
 1. Run the code
 2. You would be prompted to input the Chinese full name of the desired LegCo Member. For example, input "葉劉淑儀" if you are interested in Hon Mrs. Regina IP LAU Suk-yee
-3. The code would run and output a Word document "speech.docx"
+3. You would be prompted to select where to save the output document
+4. The code would run and output a Word document "speech.docx"
    
 _Edit the last line of code if you want it renamed_
