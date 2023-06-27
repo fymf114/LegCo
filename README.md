@@ -2,7 +2,8 @@
 attendance.js - To find the attendance of a certain Hong Kong LegCo Member for a specific quarter or period
 
 speech.py - To find all the quotes of a certain Hong Kong LegCo Member in official council meetings records
-   Users who have never used Python may download the executable (for macOS only as of Jun 27, 2023) on the releases page
+
+   _Users who have never used Python may download the executable (for macOS only as of Jun 27, 2023) on the releases page_
 
 _made for the 7th LegCo_
 
