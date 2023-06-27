@@ -3,19 +3,25 @@ from docx import Document
 from io import BytesIO
 from selenium import webdriver
 from time import sleep
+from tkinter import filedialog
+from tkinter import Tk
+from urllib3.exceptions import InsecureRequestWarning
 
 import os
 import pdfplumber
 import re
 import requests
 import sys
-
-# import tkinter.filedialog as filedialog
 import warnings
 
-from urllib3.exceptions import InsecureRequestWarning
 
 warnings.filterwarnings("ignore", category=InsecureRequestWarning)
+
+start_phrase = input("Please input the Chinese full name of the desired LegCo Member.\n")
+root = Tk()
+root.withdraw()
+output_dir = filedialog.askdirectory()
+output_file_path = os.path.join(output_dir, 'speech.docx')
 
 # For Chrome Driver
 # chrome_driver_path = filedialog.askopenfilename(title="Select Chrome Driver", filetypes=(("All Files", "*.*"),))
@@ -40,46 +46,52 @@ for element in elements:
 driver.quit()
 # appending the link that is missing on the above LegCo page
 links.append('https://www.legco.gov.hk/yr2023/chinese/counmtg/floor/cm20230524-confirm-ec.pdf')
-start_phrase = input("Please input the Chinese full name of the desired LegCo Member.")
 start_phrase = start_phrase.strip() + '議員：'
 end_phrases = ['議員：', '局長：', '主席：', '代理主席：']
 document = Document()
 current_dir = sys.path[0] if getattr(sys, 'frozen', False) else os.getcwd()
-output_file_path = os.path.join(current_dir, 'speech.docx')
+output_file_path = os.path.abspath(output_file_path)
 is_speech_in_progress = False
 speech_content = ""
 pattern_to_be_removed = r'(立法會─\d+年\d+月\d+日)|(\d+LEGISLATIVECOUNCIL―\d+[A-Za-z]+\d+)|' \
                         r'(LEGISLATIVECOUNCIL―\d+[A-Za-z]+\d+)'
 
 for link in links:
-    response = requests.get(link, verify=False)
-    pdf_bytes = BytesIO(response.content)
-    with pdfplumber.open(pdf_bytes) as pdf:
-        print("Processing: " + link)
+    try:
+        response = requests.get(link, verify=False)
+        response.raise_for_status()  # Raise an exception if the response is not successful
 
-        for page in pdf.pages:
-            text = page.extract_text()
-            text = re.sub(' ', '', text)  # Normalize spaces
-            text = re.sub(pattern_to_be_removed, '', text)
+        pdf_bytes = BytesIO(response.content)
+        with pdfplumber.open(pdf_bytes) as pdf:
+            print("Processing: " + link)
 
-            if start_phrase in text and not is_speech_in_progress:
-                text = text[text.index(start_phrase) + len(start_phrase):]
-                is_speech_in_progress = True
+            for page in pdf.pages:
+                text = page.extract_text()
+                text = re.sub(' ', '', text)  # Normalize spaces
+                text = re.sub(pattern_to_be_removed, '', text)
 
-            if is_speech_in_progress:
-                for end_phrase in end_phrases:
-                    if end_phrase in text:
-                        text = text[:text.index(end_phrase)]
-                        is_speech_in_progress = False
-                        break
+                if start_phrase in text and not is_speech_in_progress:
+                    text = text[text.index(start_phrase) + len(start_phrase):]
+                    is_speech_in_progress = True
 
-                speech_content += text
+                if is_speech_in_progress:
+                    for end_phrase in end_phrases:
+                        if end_phrase in text:
+                            text = text[:text.index(end_phrase)]
+                            is_speech_in_progress = False
+                            break
 
-            if not is_speech_in_progress and speech_content:
-                document.add_paragraph(link)
-                document.add_paragraph(speech_content.strip())
-                print(link)
-                print(speech_content.strip())  # Print the desired paragraph
-                speech_content = ""
+                    speech_content += text
+
+                if not is_speech_in_progress and speech_content:
+                    document.add_paragraph(link)
+                    document.add_paragraph(speech_content.strip())
+                    print(speech_content.strip())  # Print the desired paragraph
+                    speech_content = ""
+
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to download PDF from link: {link}")
+        print(f"Error: {e}")
+        continue
 
 document.save(output_file_path)
