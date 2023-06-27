@@ -34,10 +34,11 @@ _By default, Safari is used. Edit Line 20~24 if you would like to use the others
 3. You would be prompted to select where to save the output document
 4. The code would run and output a Word document "speech.docx"
 
-##Disclaimer
+_Edit the last line of code if you want it renamed_
+
+## Disclaimer
 
 This package is not affiliated with or endorsed by the Legislative Council of Hong Kong.
 
 The Legislative Council of Hong Kong is the copyright owner of data retrieved from its open data API.
    
-_Edit the last line of code if you want it renamed_
