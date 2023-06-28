@@ -39,7 +39,7 @@ _Users who have never used Python may download the executable (for macOS only as
 
 ## Disclaimer
 
-This package is not affiliated with or endorsed by the Legislative Council of Hong Kong.
+This repository is not affiliated with or endorsed by the Legislative Council of Hong Kong.
 
 The Legislative Council of Hong Kong is the copyright owner of data retrieved from its open data API.
    
